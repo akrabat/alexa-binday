@@ -1,0 +1,5 @@
+{
+    "settings": {
+        "application_id": "amzn1.ask.skill.{some uuid}"
+    }
+}
