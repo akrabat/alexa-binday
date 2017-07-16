@@ -33,7 +33,14 @@ func main(args: [String:Any]) -> [String:Any]
         print("Found intent dictionary")
 
         intentName = intent["name"] as? String ?? intentName
-        slots = intent["slots"] as? [String:String] ?? slots
+        if let intentSlots = intent["slots"] as? [String:Any] {
+            for (name, intentItem) in intentSlots {
+                let item = intentItem as! [String:String]
+                for (_, value) in item {
+                    slots[name] = value
+                }
+            }
+        }
     }
 
     // create the action name to invoke by taking __OW_ACTION_NAME and replacing the last segment
