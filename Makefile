@@ -36,7 +36,7 @@ curl: $(ZIPS)
 
 # ------------------------------------------------------------------------------
 # Misc targets
-.PHONY: lastlog setup clean
+.PHONY: lastlog setup clean distclean
 
 lastlog:
 	wsk activation list -l1 | tail -n1 | cut -d ' ' -f1 | xargs wsk activation logs
@@ -48,3 +48,7 @@ setup:
 clean:
 	rm -rf build/*.swift
 	rm -rf build/*.zip
+
+distclean: clean
+	./deleteActions.sh $(PACKAGE) $(ACTIONS)
+	wsk package delete $(PACKAGE)

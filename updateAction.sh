@@ -3,6 +3,10 @@
 # Run wsk action update for a set of zip files
 
 GIT_HASH=`git rev-parse HEAD`
+status="$(git status --short)"
+if [ -n "$status" ] ; then
+    GIT_HASH="Local changes from $GIT_HASH"
+fi
 
 PACKAGE=$1
 shift
