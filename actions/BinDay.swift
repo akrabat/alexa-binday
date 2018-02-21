@@ -30,7 +30,7 @@ func main(args: [String:Any]) -> [String:Any]
         let intent = request["intent"] as? [String:Any]
     {
         // Found intent dictionary. if we didn't find it, then we use the defaults set up earlier
-        print("Found intent dictionary")
+        print("Found intent")
 
         intentName = intent["name"] as? String ?? intentName
         if let intentSlots = intent["slots"] as? [String:Any] {
@@ -43,29 +43,50 @@ func main(args: [String:Any]) -> [String:Any]
         }
     }
 
-    // create the action name to invoke by taking __OW_ACTION_NAME and replacing the last segment
-    // with the intent name
-    let thisActionName = env["__OW_ACTION_NAME"] ?? ""
-    var parts = thisActionName.components(separatedBy: "/")
-    parts.removeLast()
-    parts.append(intentName)
-    let actionName = parts.joined(separator: "/")
-
     // try and invoke the intent action
-    print("Intent is \(intentName); invoking \(actionName)")
-    let invocationResult = Whisk.invoke(actionNamed: actionName, withParameters: slots)
-    
-    // extract result dictionary and success flag from the invocationResult and return the
-    // result if success is true
-    if
-        let response = invocationResult["response"] as? [String:Any],
-        let result = response["result"] as? [String:Any],
-        let success = response["success"] as? Bool,
-        success == true
+    print("Intent is \(intentName).")
+    switch (intentName)
     {
-        return result
+        case "NextBin":
+            return nextBin(args: slots)
+
+        default:
+            return createAlexaResult("I'm sorry, I don't know what to do with \(intentName)")
+    }
+    // let invocationResult = Whisk.invoke(actionNamed: actionName, withParameters: slots)
+}
+
+func nextBin(args: [String:Any]) -> [String:Any]
+{
+    let today = Date()
+    let calendar = Calendar.current
+    let weekOfYear = calendar.component(.weekOfYear, from: today)
+    let weekday = calendar.component(.weekday, from: today)
+
+    var colour = "black"
+    if weekOfYear % 2 == 0 {
+        // even week - so black bin
+        colour = "green"
     }
 
-    // failed to run the intent action or it was not successful
-    return createAlexaResult("Sorry, but I was unable to do this at this time")
+    if (weekday > 5) {
+        // it's after Thursday so we need to swap
+        if (colour == "black") {
+            colour = "green"
+        } else {
+            colour = "black"
+        }
+    }
+
+    var next = "this Thursday"
+    if weekday == 4 {
+        next = "tomorrow"
+    } else if weekday == 5 {
+        next = "today"
+    } else if weekday == 0 || weekday > 5 {
+        next = "<prosody pitch=\"low\">next</prosody> Thursday" // Stop Alexa raising her pitch on "next" before a day name
+    }
+
+    print("The \(colour) bin is \(next)")
+    return createAlexaResult("The \(colour) bin is \(next)")
 }
