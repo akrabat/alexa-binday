@@ -14,10 +14,10 @@ func main(args: [String:Any]) -> [String:Any]
     let weekOfYear = calendar.component(.weekOfYear, from: today)
     let weekday = calendar.component(.weekday, from: today)
 
-    var colour = "green"
+    var colour = "black"
     if weekOfYear % 2 == 0 {
         // even week - so black bin
-        colour = "black"
+        colour = "green"
     }
 
     if (weekday > 5) {
