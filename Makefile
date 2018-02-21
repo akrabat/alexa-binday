@@ -34,6 +34,10 @@ curl: $(ZIPS)
 	$(eval HOST := $(shell wsk property get --apihost | awk '{printf("%s", $$4)}'))
 	curl -k https://$(HOST)/api/v1/web/$(NAMESPACE)/$(PACKAGE)/$(action)?$(args) | jq -S
 
+test:
+	$(eval HOST := $(shell wsk property get --apihost | awk '{printf("%s", $$4)}'))
+	 curl -i -X POST -H "Content-Type: application/json" -d @test_payload.json "https://$(HOST)/api/v1/web/$(NAMESPACE)/$(PACKAGE)/BinDay.json"
+
 # ------------------------------------------------------------------------------
 # Misc targets
 .PHONY: lastlog setup clean distclean
