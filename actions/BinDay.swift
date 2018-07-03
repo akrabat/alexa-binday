@@ -53,9 +53,17 @@ func main(args: [String:Any]) -> [String:Any]
         default:
             return createAlexaResult("I'm sorry, I don't know what to do with \(intentName)")
     }
-    // let invocationResult = Whisk.invoke(actionNamed: actionName, withParameters: slots)
 }
 
+/**
+ * Respond to Alexa's NextBin intent
+ *
+ * Work out if it's a green bit or a black bin week based on if this is an odd or even week.
+ * Bin day is Thursday, so if it's Friday or Saturday, then flip the colour.
+ * If today is bin day, then change the text to day "today"
+ *
+ * NOTE: Obviously, this is a hard-coded algorithm that only works for my local council…
+ */
 func nextBin(args: [String:Any]) -> [String:Any]
 {
     let today = Date()

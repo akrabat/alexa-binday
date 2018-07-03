@@ -7,7 +7,7 @@ NAMESPACE = $(shell wsk namespace list | tail -n1)
 PACKAGE=AlexaBinDay
 
 # list of actions to build
-ACTIONS = BinDay NextBin
+ACTIONS = BinDay
 
 ZIPS=$(ACTIONS:%=build/%.zip)
 GIT_HASH=$(shell git rev-parse HEAD)
